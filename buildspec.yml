@@ -2,10 +2,21 @@ version: 0.2
 
 phases:
   install:
-    commands: []
+    commands:
+      - echo "Installing dependencies..."
+      - npm install
   build:
-    commands: []
+    commands:
+      - echo "Build phase (nothing special for now)..."
+  post_build:
+    commands:
+      - echo "Packaging application for Elastic Beanstalk..."
+      - mkdir -p deploy
+      - cp -R * deploy/
+      - cd deploy
+      - zip -r ../app.zip .
 
 artifacts:
   files:
-    - '**/*'
+    - app.zip
+  discard-paths: yes
