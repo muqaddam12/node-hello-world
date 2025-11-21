@@ -5,18 +5,23 @@ phases:
     commands:
       - echo "Installing dependencies..."
       - npm install
+
   build:
     commands:
-      - echo "Build phase (nothing special for now)..."
+      - echo "Build phase..."
+      # If you have a build script like React/Next.js, uncomment:
+      # - npm run build
+
   post_build:
     commands:
       - echo "Packaging application for Elastic Beanstalk..."
-      - mkdir -p deploy
-      - cp -R * deploy/
-      - cd deploy
-      - zip -r ../app.zip .
+      - rm -f app.zip
+      - zip -r app.zip . \
+          -x "node_modules/*" \
+          -x "*.git*" \
+          -x ".git/*" \
+          -x "app.zip"
 
 artifacts:
   files:
     - app.zip
-  discard-paths: yes
