@@ -3,18 +3,19 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "Installing dependencies..."
-      - npm install
+      - echo "Installing dependencies (without saving artifacts)..."
+      - npm ci --omit=dev
   build:
     commands:
       - echo "Build phase (nothing special for now)..."
   post_build:
     commands:
-      - echo "Packaging application for Elastic Beanstalk..."
-      - mkdir -p deploy
-      - cp -R * deploy/
-      - cd deploy
-      - zip -r ../app.zip .
+      - echo "Staging deployment bundle without node_modules or workspace clutter..."
+      - rm -rf deploy
+      - mkdir -p deploy/public
+      - cp app.js package.json package-lock.json README.md deploy/
+      - cp -R public/. deploy/public/
+      - cd deploy && zip -r ../app.zip .
 
 artifacts:
   files:
